@@ -24,4 +24,5 @@ output_signal = interp1(t_input, s, 0:1/adc_fs:t_input(end));
 
 
 %todo filters: LP FIR  500, HP IIR 2 , bs filt 50 hz 2000
+
 end

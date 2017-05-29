@@ -21,12 +21,12 @@ function [ ecg,  fs] = ecg_lp_generator
     Msign_p(1, :) = Sa(1:1655);
     Msign_p(2, :) = ti;
     
-    a = 6.5;
-    b = 6;
-    c = 5.5;
-    d = 4.5;
-    e = 4;
-    f = 3.8;
+    a = 7;
+    b = 6.5;
+    c = 6;
+    d = 5.5;
+    e = 5;
+    f = 4.5;
 
 %     a = 14;
 %     b = 13;
@@ -35,33 +35,20 @@ function [ ecg,  fs] = ecg_lp_generator
 %     e = 9;
 %     f = 8;
 
-
-    for i = 600:20:640
-         Msign_p(1,i-5) = Msign_p(1,i-5)-Msign_p(1, i-5)/a; 
-         Msign_p(1,i-4) = Msign_p(1,i-4)-Msign_p(1,i-4)/b;
-         Msign_p(1,i-3) = Msign_p(1,i-3)- Msign_p(1,i-3)/c;
-         Msign_p(1,i-2) = Msign_p(1,i-2)- Msign_p(1,i-2)/d;
-         Msign_p(1,i-1) = Msign_p(1,i-1)- Msign_p(1,i-1)/e;
-         Msign_p(1,i) = Msign_p(1,i)- Msign_p(1,i)/f;
-         Msign_p(1,i+5) = Msign_p(1,i+5)-Msign_p(1, i+5)/a; 
-         Msign_p(1,i+4) = Msign_p(1,i+4)-Msign_p(1,i+4)/b;
-         Msign_p(1,i+3) = Msign_p(1,i+3)- Msign_p(1,i+3)/c;
-         Msign_p(1,i+2) = Msign_p(1,i+2)- Msign_p(1,i+2)/d;
-         Msign_p(1,i+1) = Msign_p(1,i+1)- Msign_p(1,i+1)/e;
+x = 0.0155;
+    for i = 610:5:625
+         Msign_p(1,i-5) = Msign_p(1,i-5)-Msign_p(1, i-5)/a-x; 
+         Msign_p(1,i-4) = Msign_p(1,i-4)-Msign_p(1,i-4)/b-x;
+         Msign_p(1,i-3) = Msign_p(1,i-3)- Msign_p(1,i-3)/c-x;
+         Msign_p(1,i-2) = Msign_p(1,i-2)- Msign_p(1,i-2)/d-x;
+         Msign_p(1,i-1) = Msign_p(1,i-1)- Msign_p(1,i-1)/e-x;
+         Msign_p(1,i) = Msign_p(1,i)- Msign_p(1,i)/f-x;
+         Msign_p(1,i+5) = Msign_p(1,i+5)-Msign_p(1, i+5)/a-x; 
+         Msign_p(1,i+4) = Msign_p(1,i+4)-Msign_p(1,i+4)/b-x;
+         Msign_p(1,i+3) = Msign_p(1,i+3)- Msign_p(1,i+3)/c-x;
+         Msign_p(1,i+2) = Msign_p(1,i+2)- Msign_p(1,i+2)/d-x;
+         Msign_p(1,i+1) = Msign_p(1,i+1)- Msign_p(1,i+1)/e-x;
     end
-%     for i = 670:20:690
-%          Msign_p(1,i-5) = Msign_p(1,i-5)-Msign_p(1, i-5)/6.5; 
-%          Msign_p(1,i-4) = Msign_p(1,i-4)-Msign_p(1,i-4)/6;
-%          Msign_p(1,i-3) = Msign_p(1,i-3)- Msign_p(1,i-3)/5.5;
-%          Msign_p(1,i-2) = Msign_p(1,i-2)- Msign_p(1,i-2)/4;
-%          Msign_p(1,i-1) = Msign_p(1,i-1)- Msign_p(1,i-1)/4.5;
-%          Msign_p(1,i) = Msign_p(1,i)- Msign_p(1,i)/3.8;
-%          Msign_p(1,i+5) = Msign_p(1,i+5)-Msign_p(1, i+5)/6.5; 
-%          Msign_p(1,i+4) = Msign_p(1,i+4)-Msign_p(1,i+4)/6;
-%          Msign_p(1,i+3) = Msign_p(1,i+3)- Msign_p(1,i+3)/5.5;
-%          Msign_p(1,i+2) = Msign_p(1,i+2)- Msign_p(1,i+2)/4;
-%          Msign_p(1,i+1) = Msign_p(1,i+1)- Msign_p(1,i+1)/4.5;
-%     end   
 
 
     ecg = interp1(Msign_p(2, :), Msign_p(1, :), ti, 'spline');
@@ -72,8 +59,7 @@ function [ ecg,  fs] = ecg_lp_generator
     fs = length(ts) / RR_time; 
     ecg = interp1(Msign_p(2, :), ecg,  ts, 'spline');  
     
-   figure; plot( ts, ecg); grid on; title('Model ecg');xlabel('time, ms'); ylabel('Amplitude, mV'); 
-%    cw1 = cwt(ecg, 1:1000,'sym4','plot'); 
+   figure; plot(ts, ecg); grid on; title('Model ecg');xlabel('time, ms'); ylabel('Amplitude, mV'); 
 
 
     %%%create n cardiac cycle 
