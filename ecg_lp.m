@@ -1,4 +1,4 @@
-function s = ecg_lp(t, t_RR, p);
+function s = ecg_lp(t, t_RR, p)
 
 if (~exist('p'))
  p.a_P = 0.05;
@@ -20,18 +20,25 @@ if (~exist('p'))
  p.t_Tf = 0.15;
  
  
- p.a_alp1 = 0.020; % 25 uV
- p.f_alp1 = 100; % Hz
- p.a_alp2 = 0.025; % 25 uV
- p.f_alp2 = 60; % Hz
- p.t_alp = 0.040; % 40 ms
+%  p.a_alp1 = 0.020; % 25 uV
+%  p.f_alp1 = 100; % Hz
+%  p.a_alp2 = 0.025; % 25 uV
+%  p.f_alp2 = 60; % Hz
+%  p.t_alp = 0.040; % 40 ms
+%  p.t_alpj = 0.020; % 20 ms
+ 
+ p.a_alp1 = 0; % 25 uV
+ p.f_alp1 = 0; % Hz
+ p.a_alp2 = 0; % 25 uV
+ p.f_alp2 = 0; % Hz
+ p.t_alp = 0; % 40 ms
  p.t_alpj = 0.020; % 20 ms
  
  
  p.a_vlp1 = 0.020; % 25 uV
- p.f_vlp1 = 100; % Hz
+ p.f_vlp1 = 183; % Hz
  p.a_vlp2 = 0.025; % 25 uV
- p.f_vlp2 = 60; % Hz
+ p.f_vlp2 = 73; % Hz
  p.t_vlp = 0.040; % 40 ms
  p.t_vlpj = 0.020; % 20 ms
   
