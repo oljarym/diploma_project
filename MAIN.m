@@ -2,8 +2,8 @@ close all
 clear
 
 %parameters of signal model
-fs = 10000; % Hz
-duration = 95;
+fs = 15000; % Hz
+duration = 141;
 hr = 60; % heart rate, bpm
 t = (0:1/fs:duration); % s
 
@@ -11,8 +11,8 @@ t = (0:1/fs:duration); % s
 noize_e = 0.001;
 
 % parameters of ecg chanel
-adc_fs = 1000; % Hz
-adc_enob = 20;
+adc_fs = 6000; % Hz
+adc_enob = 19;
 f_low = 0.05; % Hz
 f_high = 450; % Hz
 noize = 0.01;
@@ -29,8 +29,8 @@ ecg_lp_sig = 0.1*ecg_lp(t, 60/hr);
 ecg_lp_s = ecg + ecg_lp_sig + noize_e*rand(size(ecg_lp_sig)) + sine_wave;
 
 
-figure; title('ECG signal with ventricular lp')
-plot(t, ecg_lp_s); xlabel('t, s'); ylabel('Voltage, mV'); grid on;
+% % figure; title('ECG signal with ventricular lp')
+% % plot(t, ecg_lp_s); xlabel('t, s'); ylabel('Voltage, mV'); grid on;
 
 % % % % % spectrm of ECG with LP
 % % ecg_lp_f = fft(ecg_lp_s);
@@ -56,15 +56,17 @@ plot(t, ecg_lp_s); xlabel('t, s'); ylabel('Voltage, mV'); grid on;
 
 t_a_ch = (0:1/adc_fs:duration);
 ecg_after_chanel = ecg_channel_model(ecg_lp_s, fs, adc_fs, adc_enob,f_low,f_high, noize);
+% 
+% figure, plot(t_a_ch, ecg_after_chanel); title('ECG signal after input chanel');
+% xlabel('t, s');ylabel('Amplitude, mV'); grid on;
 
-figure, plot(t_a_ch, ecg_after_chanel); title('ECG signal after input chanel');
-xlabel('t, s');ylabel('Amplitude, mV'); grid on;
+% figure, plot(ecg_after_chanel(10*adc_fs:end)); grid on;
 
-figure, plot(ecg_after_chanel(10*adc_fs:end)); grid on;
+% % % t_offset = 15; % time, s
+% % % 
+% % % ecg_after_chanel = ecg_after_chanel(t_offset*adc_fs:end);
 
-t_offset = 15; % time, s
 
-ecg_after_chanel = ecg_after_chanel(t_offset*adc_fs:end);
 % % ecg_lp_fch = fft(ecg_after_chanel);
 % % f = (0:length(ecg_lp_fch)-1)*fs/length(ecg_lp_fch);
 % % f = f(1:end/2);
@@ -79,11 +81,16 @@ ecg_after_chanel = ecg_after_chanel(t_offset*adc_fs:end);
 
 %%% signal processing
 rr_duration = 1;
-out_s = signal_processing(ecg_after_chanel, adc_fs, rr_duration);
-figure, plot(out_s); title('signal after time domain transform'); grid on;
+bad_intervals = 40; % compensation of zero shift (digital filters)
+out_s = signal_processing(ecg_after_chanel, adc_fs, rr_duration, bad_intervals);
+
+step = 1/adc_fs;
+t_out = 0:1/adc_fs:1-step;
+figure, plot(t_out, out_s); title('Module ECG after filtration 250-400Hz'); grid on;hold on;
+
+% area(ti(lp_duration_samples), out_signal(lp_duration_samples), 'FaceColor', 'r','EdgeColor','r');
+% 
  
-
-
 
 
 

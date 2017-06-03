@@ -41,7 +41,7 @@ win = blackmanharris(N_lp+1);
 b  = fir1(N_lp, Fc_lp/(input_fs/2), 'low', win, flag);
 Hd_pl = dfilt.dffir(b);
 
-% digital filtration LP filter Fc = 150 Hz
+% % % digital filtration LP filter Fc = 150 Hz
 output_signal = Hd_pl.filter(output_signal);
 
 % Digital HP filter 0.05 Hz modelliing
@@ -52,7 +52,7 @@ h_hp  = fdesign.highpass('N,F3dB', N_hp, Fc_hp, adc_fs);
 Hd_hp = design(h_hp, 'butter');
 
 % digital filtration HP filter Fc = 0.05 Hz
-output_signal = Hd_hp.filter(output_signal);
+ output_signal = Hd_hp.filter(output_signal);
 
 % % digital BS filter 50 Hz
 Fpass1 = 49.5;            % First Passband Frequency
@@ -70,6 +70,6 @@ b_bs  = fir1(N, Wn, TYPE, kaiser(N+1, BETA), flag);
 Hd_bs = dfilt.dffir(b_bs);
 
 % digital filtration BS filter Fc = 50 Hz
-output_signal = Hd_bs.filter(output_signal);
+ output_signal = Hd_bs.filter(output_signal);
 
 end
