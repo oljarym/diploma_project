@@ -61,7 +61,7 @@ plot(f,abs(sig4fft)); xlim([0, 500]);
 title('Specterum of avarege ECG with LP after input chanel');
 xlabel('f, Hz'); ylabel('Amplitude');
 
-
+relation = 
 
 
 
