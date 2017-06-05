@@ -1,4 +1,4 @@
-function output_signal = ecg_channel_model(input_signal, input_fs, adc_fs, adc_enob, f_low, f_high, noize)
+function output_signal = ecg_channel_model(input_signal, input_fs, adc_fs, adc_enob, f_low, f_high, noize, plot_fft)
 
 % Emulate noise fot input 
 s = input_signal + noize*rand(size(input_signal));
@@ -16,7 +16,7 @@ Hd = design(h, 'butter');
 s = Hd.filter(s);
 
 % START Emulate ADC 
-Vref = 10; % mV
+Vref = 0.24; % V
 % lsb = Vref/2^adc_enob;
 adc_nbits = 23;
 lsb = Vref/2^adc_nbits;
@@ -71,5 +71,17 @@ Hd_bs = dfilt.dffir(b_bs);
 
 % digital filtration BS filter Fc = 50 Hz
  output_signal = Hd_bs.filter(output_signal);
+ 
+ if plot_fft
+        ecg_lp_fch = fft(output_signal);
+        f = (0:length(ecg_lp_fch)-1)*adc_fs/length(ecg_lp_fch);
+        f = f(1:end/2);
+        ecg_lp_fch = ecg_lp_fch(1:end/2);
+        
+        figure,
+        plot(f,abs(ecg_lp_fch)); xlim([0, 500]);
+        title('Specterum of ECG with LP after input chanel');
+        xlabel('f, Hz'); ylabel('Amplitude');     
+ end
 
 end
