@@ -1,49 +1,37 @@
 close all
 clear
 
-% enobs = [13.86, 13.5, 13.2, 12.4, 10.8, 8.9];
-enobs = [16, 15.8, 15.5, 14.3, 13.5, 11];
-
+% QRS from 31 ms to 0.46 ms when hr = 1
+enobs = [13.86, 13.5, 13.2, 12.4, 10.8, 8.9];
 adc_FS = [1000, 2000, 4000, 8000, 16000, 32000];
-LAS40_res = [0, 0, 0, 0, 0, 0];
-RMS40_res = [0, 0, 0, 0, 0, 0];
-QRSD_res = [0, 0, 0, 0, 0, 0];
 
-for i = 1:4
-%parameters of signal model
-if i < 4
-  fs = 20000;
-end
-if i == 5
-  fs = 32000;
-end
-if i == 6  
-  fs = 64000; % Hz
-end
 
-% some comsole logs
-disp('iteration =');
-disp(i)
-
+fs = 10000;
 duration = 200;
 hr = 60; % heart rate, bpm
 t = (0:1/fs:duration); % s
-noize_e = 0;% electrode polarization, mV 300 mV
+noize_e = 30;% electrode polarization, mV 300 mV
 isoline_a = 0;
 genetate_model_spectr = false;
 normal_ecg = false;
 
-
+% fs adc	enob + ... 2-3b
+% 1000	13.86
+% 2000	13.5
+% 4000	13.2
+% 8000	12.4
+% 16000	10.8
+% 32000	8.9
 
 % parameters of ecg chanel------------------------------
 % adc_fs = 1000; % Hz
-adc_fs = adc_FS(i);
+adc_fs = 1000;
 t_a_ch = (0:1/adc_fs:duration);
 % adc_enob = 13.2; 
-adc_enob = 11;
+adc_enob = 13.86;
 f_low = 0.05; % Hz
 f_high = 450; % Hz
-noize = 0.008; %mV
+noize = 30; %mV
 plot_fft_after_channel = false;
 % ----------------------RUN-------------------------------
 % ECG with LP
@@ -73,40 +61,62 @@ t_out = 0:1/adc_fs:1-step;
 
 %  helpness par
 
+% level = max(out_s(1:0.2*adc_fs));
 
-qrs_level = max(max(out_s(1:0.2*adc_fs)), max(out_s(0.55*adc_fs:end)));
+qrs_level = max(max(out_s(1:0.3*adc_fs)), max(out_s(0.50*adc_fs:end)));
 level = qrs_level*1e6;
-
+% qrs_level = level*1e-6*30;
 qrs_level_line = ones(length(t_out), 1)*level*1e-6;
 qrs_first = find(out_s*1e6>level, 1, 'first');% first point of detected QRS
 qrs_last = find(out_s*1e6>level, 1, 'last');% first point of detected QRS
 
 qrs_first_line = zeros(length(t_out), 1);
-qrs_first_line(qrs_first) = max(out_s)/2;
+qrs_first_line(qrs_first) = max(out_s)/1.5;
 qrs_last_line = zeros(length(t_out), 1);
-qrs_last_line(qrs_last) = max(out_s)/2;
+qrs_last_line(qrs_last) = max(out_s)/1.5;
 qrsd_bounds = qrs_first_line + qrs_last_line;
 
 QRSD = t_out(qrs_last)-t_out(qrs_first);
 disp('QRSD =');
 disp(QRSD);
-QRSD_res(i) = QRSD;
-
 
 las4_i = qrs_last-0.04*adc_fs:qrs_last; % last 40 us interval for this QRS
 RMS40 = rms(out_s(las4_i));
 disp('RMS40 = ');
 disp(RMS40);
-RMS40_res(i) = RMS40;
 
 sig_las40 = out_s(las4_i);
-las40_i = find(sig_las40*1e6<40, 1, 'last');
-LAS40 = t_out(qrs_last)-t_out(las40_i+qrs_first);
+
+interval_for_las40 = 0.42*adc_fs+1:qrs_last;
+
+sig_last = zeros(length(out_s), 1);
+
+l = out_s(0.42*adc_fs+1);
+M = ones(length(out_s(1:0.42*adc_fs)), 1);
+part = l* ones(length(out_s(1:0.42*adc_fs)), 1);
+
+sig_last(1:0.42*adc_fs) = part;
+sig_last(0.42*adc_fs:qrs_last)= out_s(0.42*adc_fs:qrs_last);
+
+% figure, plot(t_out, sig_last);
+
+
+% sig_last(interval_for_las40) = out_s(interval_for_las40);
+las40_i = find(sig_last*1e3>40, 1, 'last'); %'last'
+
+
+
+las40_line = zeros(length(t_out), 1);
+iii = las40_i(end);
+las40_line(iii) = max(out_s)/1.5;
+qrsd_bounds  = qrsd_bounds + las40_line;
+
+
+LAS40 = t_out(qrs_last)-t_out(iii);
 disp('LAS40 =');
 disp(LAS40);
-LAS40_res(i) = LAS40;
 
-level_40 = ones(length(t_out), 1)*40*1e-6;
+level_40 = ones(length(t_out), 1)*40*1e-3;
 
 figure, 
 h1 = subplot(2, 1, 1);
@@ -140,7 +150,6 @@ i_f = round(40/adc_fs*2*length(sig4fft));
 % relation = rms(abs(sig4fft(i_f:end)))/rms(abs(sig4fft(1:i_f-1)));
 % 
 % result_2 = relation^2; %   1.4037e-05
-end
-disp('THE END');
 
+disp('THE END');
 

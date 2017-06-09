@@ -37,4 +37,33 @@ tt(i) = tt(i-1) + 0.4*p.t_Tf; ss(i) = 0.7*p.a_T; i = i+1;
 tt(i) = tt(i-1) + 0.6*p.t_Tf; ss(i) = 0; i = i+1;
 tt(i) = 1;                    ss(i) = 0; i = i+1;
 
-s = interp1(tt, ss, mod(t/t_RR, 1), 'linear');
+% % i = 1; tt = []; ss = [];
+% % 
+% tt(i) = 0;                    ss(i) = 0; i = i+1;
+% tt(i) = tt(i-1) + p.t_0P;     ss(i) = 0; i = i+1;
+% tt(i) = tt(i-1) + 0.3*p.t_P;  ss(i) = 0.8*p.a_P; i = i+1;
+% tt(i) = tt(i-1) + 0.2*p.t_P;  ss(i) = p.a_P; i = i+1;
+% tt(i) = tt(i-1) + 0.2*p.t_P;  ss(i) = 0.8*p.a_P; i = i+1;
+% tt(i) = tt(i-1) + 0.3*p.t_P;  ss(i) = 0; i = i+1;
+% tt(i) = tt(i-1) + p.t_PQ;     ss(i) = 0; i = i+1;
+% tt(i) = tt(i-1) + p.t_QRS/4;  ss(i) = p.a_Q; i = i+1;
+% tt(i) = tt(i-1) + p.t_QRS/4;  ss(i) = p.a_R; i = i+1;
+% tt(i) = tt(i-1) + p.t_QRS/4;  ss(i) = p.a_S; i = i+1;
+% tt(i) = tt(i-1) + p.t_QRS/4;  ss(i) = 0; i = i+1;
+% tt(i) = tt(i-1) + p.t_ST;     ss(i) = 0; i = i+1;
+% 
+% % tt1 = []; ss1 = [];
+% tt1 = zeros(i-1, 1);
+% 
+% tt1(i) = tt(i-1) + 0.6*p.t_Tr; ss1(i) = 0.8*p.a_T; i = i+1;
+% tt1(i) = tt1(i-1) + 0.4*p.t_Tr; ss1(i) = p.a_T; i = i+1;
+% tt1(i) = tt1(i-1) + 0.4*p.t_Tf; ss1(i) = 0.7*p.a_T; i = i+1;
+% tt1(i) = tt1(i-1) + 0.6*p.t_Tf; ss1(i) = 0; i = i+1;
+% tt1(i) = 1;                    ss1(i) = 0; i = i+1;
+% 
+% s1 = interp1(tt1, ss1, mod(t/t_RR, 1), 'linear');
+
+
+ s = interp1(tt, ss, mod(t/t_RR, 1), 'liner'); 
+% pchip
+

@@ -1,15 +1,16 @@
 close all
 clear
 
-fs = 10000; % Hz
-hr = 60; % heart rate, bpm
-t = (0:1/fs:20)'; % s
-
-ecg = generate_ecg_lp_signal(t, hr, 0.01, 0.1);
-figure, plot(ecg);
-
-
 % fs = 10000; % Hz
+% hr = 60; % heart rate, bpm
+% t = (0:1/fs:20)'; % s
+% 
+% ecg = generate_ecg_lp_signal(t, hr, 0.01, 0.1);
+% figure, plot(ecg);
+
+
+
+
 % 
 % % % % fs> 10 kHz : 50 kHz
 % 

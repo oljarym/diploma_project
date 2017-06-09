@@ -28,8 +28,8 @@ function [ out_signal, ecg_ave_new ] = signal_processing(signal, adc_fs, rr_dura
     
     ave_m_new = vec2mat(new_signal, length_cardic_cicle);
     ecg_ave_new = sum(ave_m_new)./(n-k-1);
-    figure, plot(ecg_ave_new); title('Channel filters shift compensated average signal'); grid on;
-       
+%     figure, plot(ecg_ave_new); title('Channel filters shift compensated average signal'); grid on;
+%        
     
 %     ecg_ave = sum(ave_m)./n;
 %     figure; plot(ecg_ave); title ('Averaged ECG with channel filters shift'); grid on;
@@ -60,7 +60,7 @@ function [ out_signal, ecg_ave_new ] = signal_processing(signal, adc_fs, rr_dura
     ecg_ave_filtered = filtfilt(hpFilt, ecg_ave_new);
     ecg_ave_filtered = filtfilt(lpFilt, ecg_ave_filtered);    
         
-%     figure; plot(ecg_ave_filtered);title('ECG after filtration 250-400Hz'); grid on; 
+%      figure; plot(ecg_ave_filtered);title('ECG after filtration 250-400Hz'); grid on; 
     
 % Module  
     module_ecg = abs(ecg_ave_filtered);

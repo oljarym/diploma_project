@@ -8,10 +8,10 @@ if (~exist('p'))
  p.a_T = 0.15;
  p.a_U = 0.03;
 
- p.t_0P = 0.1;
- p.t_P = 0.08;
- p.t_PQ = 0.13;
- p.t_QRS = 0.15;
+ p.t_0P = 0;
+ p.t_P = 0.116;
+ p.t_PQ = 0.08;
+ p.t_QRS = 0.07;
  p.t_ST = 0.05;
  p.t_Tr = 0.13;
  p.t_Tf = 0.15;
@@ -32,16 +32,15 @@ if (~exist('p'))
  p.a_alp2 = 0; % 25 uV
  p.f_alp2 = 0; % Hz
  p.t_alp = 0; % 40 ms
- p.t_alpj = 0.020; % 20 ms
+ p.t_alpj = 0; % 20 ms
  
  
  p.a_vlp1 = 0.020; % 25 uV
  p.f_vlp1 = 183; % Hz
  p.a_vlp2 = 0.025; % 25 uV
  p.f_vlp2 = 73; % Hz
- p.t_vlp = 0.040; % 40 ms
- p.t_vlpj = 0.020; % 20 ms
-  
+ p.t_vlp = 0.060; % 40 ms
+ p.t_vlpj = 0.030; % 20 ms
 end 
 
 

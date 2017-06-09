@@ -1,5 +1,7 @@
 function output_signal = ecg_channel_model(input_signal, input_fs, adc_fs, adc_enob, f_low, f_high, noize, plot_fft)
 
+input_signal = input_signal*1e-3;
+noize = noize*1e-3;
 % Emulate noise fot input 
 s = input_signal + noize*rand(size(input_signal));
 
@@ -16,15 +18,17 @@ Hd = design(h, 'butter');
 s = Hd.filter(s);
 
 % START Emulate ADC 
-Vref = 0.24; % V
+Vref = 2.4; % V
+
+G = 6;
 % lsb = Vref/2^adc_enob;
 adc_nbits = 23;
-lsb = Vref/2^adc_nbits;
+lsb = Vref/G/2^adc_nbits;
 
+% 
 SINAD = adc_enob*6.02 + 1.8;
-
-noise_a = Vref/sqrt(SINAD);
-s = floor(s/lsb)*lsb;
+noise_a = Vref/G/10^(SINAD/20);
+s = floor(s/lsb)*lsb;%V
 t_input = (0:length(s)-1)/input_fs;
 t_output = 0:1/adc_fs:t_input(end);
 output_signal = interp1(t_input, s, t_output) + noise_a * rand(size(t_output));
@@ -38,7 +42,7 @@ flag = 'scale';  % Sampling Flag
 % Create the window vector for the design algorithm.
 win = blackmanharris(N_lp+1);
 % Calculate the coefficients using the FIR1 function.
-b  = fir1(N_lp, Fc_lp/(input_fs/2), 'low', win, flag);
+b  = fir1(N_lp, Fc_lp/(adc_fs/2), 'low', win, flag);
 Hd_pl = dfilt.dffir(b);
 
 % % % digital filtration LP filter Fc = 150 Hz
@@ -70,7 +74,9 @@ b_bs  = fir1(N, Wn, TYPE, kaiser(N+1, BETA), flag);
 Hd_bs = dfilt.dffir(b_bs);
 
 % digital filtration BS filter Fc = 50 Hz
- output_signal = Hd_bs.filter(output_signal);
+ output_signal = Hd_bs.filter(output_signal)*1e3;
+ 
+ 
  
  if plot_fft
         ecg_lp_fch = fft(output_signal);
